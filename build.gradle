@@ -9,13 +9,14 @@ buildscript {
         google()
     }
     dependencies {
-        
+        classpath "io.freefair.gradle:lombok-plugin:8.0.0-rc2"
 
     }
 }
 
 allprojects {
     apply plugin: "eclipse"
+    apply plugin: "io.freefair.lombok"
 
     version = '1.0'
     ext {
