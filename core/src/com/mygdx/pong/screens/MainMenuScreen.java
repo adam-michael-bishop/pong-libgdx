@@ -4,19 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.pong.Pong;
+import com.mygdx.pong.ui.UIText;
 
 public class MainMenuScreen implements Screen {
     private final Pong game;
     private final OrthographicCamera camera;
     private final float viewportWidth;
     private final float viewportHeight;
-    final String titleText = "PONG";
-    final String messageText = "press any key to start";
-    final GlyphLayout titleLayout;
-    final GlyphLayout messageLayout;
+    final UIText title;
+    final UIText subtitle;
 
     public MainMenuScreen(final Pong game) {
         this.game = game;
@@ -24,9 +22,9 @@ public class MainMenuScreen implements Screen {
         this.viewportHeight = game.viewportHeight;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, game.viewportWidth, game.viewportHeight);
-        titleLayout = new GlyphLayout(game.fontLarge, titleText);
-        messageLayout = new GlyphLayout(game.fontMedium, messageText);
-        // or for non final texts: layout.setText(font, text);
+        title = new UIText("PONG", 20, game.fontGenerator);
+        subtitle = new UIText("press any key to start", 12, game.fontGenerator);
+        // or for non final texts: getLayout().setText(font, text);
     }
 
     @Override
@@ -40,14 +38,14 @@ public class MainMenuScreen implements Screen {
 
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
-        float titleX = (viewportWidth - titleLayout.width) / 2;
-        float titleY = (viewportHeight + titleLayout.height) / 1.5f;
-        float messageX = (viewportWidth - messageLayout.width) / 2;
+        float titleX = (viewportWidth - title.getLayout().width) / 2;
+        float titleY = (viewportHeight + title.getLayout().height) / 1.5f;
+        float messageX = (viewportWidth - subtitle.getLayout().width) / 2;
         float messageY = titleY - 50;
 
         game.batch.begin();
-        game.fontLarge.draw(game.batch, titleLayout, titleX, titleY);
-        game.fontMedium.draw(game.batch, messageLayout, messageX, messageY);
+        title.getFont().draw(game.batch, title.getLayout(), titleX, titleY);
+        subtitle.getFont().draw(game.batch, subtitle.getLayout(), messageX, messageY);
         game.batch.end();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
@@ -78,6 +76,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        title.getFont().dispose();
+        subtitle.getFont().dispose();
     }
 }
